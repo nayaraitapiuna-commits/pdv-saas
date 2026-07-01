@@ -574,103 +574,85 @@ header{background:linear-gradient(135deg,var(--roxo-e),var(--roxo));color:#fff;p
 
 <!-- LOADING -->
 
-<!-- SETUP WIZARD -->
-<div id="setupWizard">
-  <div class="setup-box">
-    <div class="setup-header">
-      <h2>🎉 Bem-vindo ao PDV Pro!</h2>
-      <p>Configure sua loja em menos de 2 minutos</p>
-      <div class="setup-steps" id="setupStepDots"></div>
+<!-- TELA DE PRIMEIRO ACESSO -->
+<div id="primeiroAcesso" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,var(--roxo-e),var(--roxo));z-index:9998;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
+  <div style="background:#fff;border-radius:20px;padding:32px;max-width:460px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:auto;">
+
+    <!-- HEADER -->
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:2.5rem;margin-bottom:6px;">🎉</div>
+      <h2 style="font-size:1.2rem;font-weight:800;color:var(--acai);margin-bottom:4px;">Bem-vindo ao PDV Pro!</h2>
+      <p style="font-size:.78rem;color:var(--cinza);">Configure sua loja agora — leva menos de 1 minuto.</p>
     </div>
-    <div class="setup-body">
 
-      <!-- STEP 1: NOME DA LOJA -->
-      <div class="setup-step active" id="setupStep0">
-        <h3>🏪 Como se chama sua loja?</h3>
-        <p>Esse nome vai aparecer no sistema, nos recibos e na tela de login.</p>
-        <div class="setup-preview">
-          <div class="setup-preview-nome" id="previewNome">Minha Loja</div>
-          <div class="setup-preview-sub" id="previewSub">Sistema de Vendas</div>
+    <!-- LOGO DA LOJA -->
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:.72rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Logo da sua loja</div>
+      <div style="position:relative;width:100px;height:100px;margin:0 auto 10px;">
+        <div id="logoPreviewArea" onclick="document.getElementById('logoUploadInput').click()"
+          style="width:100px;height:100px;border-radius:50%;background:var(--lilas);border:3px dashed var(--roxo);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:2.5rem;overflow:hidden;transition:all .2s;">
+          <span id="logoPreviewEmoji">🏪</span>
+          <img id="logoPreviewImg" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
         </div>
-        <div class="f-row" style="margin-bottom:10px;">
-          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Nome da loja *</label>
-          <input type="text" class="fi" id="sNomeLoja" placeholder="Ex.: Sorveteria da Maria, Lanchonete do João..."
-            oninput="document.getElementById('previewNome').textContent=this.value||'Minha Loja'">
-        </div>
-        <div class="f-row" style="margin-bottom:10px;">
-          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Tipo de negócio (opcional)</label>
-          <input type="text" class="fi" id="sSubtitulo" placeholder="Ex.: Açaí & Gelados, Lanchonete, Pizzaria..."
-            oninput="document.getElementById('previewSub').textContent=this.value||'Sistema de Vendas'">
-        </div>
-        <div class="f-row" style="margin-bottom:10px;">
-          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">WhatsApp para recibos (com DDD)</label>
-          <input type="text" class="fi" id="sWpp" placeholder="85912345678">
-        </div>
-        <div class="setup-nav">
-          <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
-        </div>
+        <div onclick="document.getElementById('logoUploadInput').click()"
+          style="position:absolute;bottom:0;right:0;width:28px;height:28px;background:var(--roxo);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;border:2px solid #fff;">📷</div>
       </div>
-
-      <!-- STEP 2: CATEGORIAS -->
-      <div class="setup-step" id="setupStep1">
-        <h3>📦 Quais são seus produtos?</h3>
-        <p>Crie as categorias do seu cardápio. Você pode mudar isso depois a qualquer momento.</p>
-        <div id="setupCatsLista"></div>
-        <button class="btn-setup-add" onclick="addSetupCat()">+ Adicionar categoria</button>
-        <div class="setup-nav">
-          <button class="btn-setup-back" onclick="setupBack()">← Voltar</button>
-          <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
-        </div>
+      <input type="file" id="logoUploadInput" accept="image/*" style="display:none;" onchange="previewLogo(this)">
+      <div style="font-size:.68rem;color:var(--cinza);">Clique para fazer upload da sua logo</div>
+      <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;" id="emojiOpcoes">
+        <span onclick="selecionarEmojiLoja('🏪')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Loja">🏪</span>
+        <span onclick="selecionarEmojiLoja('🍇')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Açaí">🍇</span>
+        <span onclick="selecionarEmojiLoja('🍦')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Sorvete">🍦</span>
+        <span onclick="selecionarEmojiLoja('🍕')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Pizza">🍕</span>
+        <span onclick="selecionarEmojiLoja('🥤')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Bebida">🥤</span>
+        <span onclick="selecionarEmojiLoja('🍔')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Hamburguer">🍔</span>
+        <span onclick="selecionarEmojiLoja('☕')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Café">☕</span>
+        <span onclick="selecionarEmojiLoja('🧁')" style="font-size:1.4rem;cursor:pointer;padding:4px;border-radius:8px;" title="Doces">🧁</span>
       </div>
-
-      <!-- STEP 3: SENHA DO ADMINISTRADOR -->
-      <div class="setup-step" id="setupStep2">
-        <h3>🔐 Crie sua senha de acesso</h3>
-        <p>Essa senha protege o sistema. Você é o administrador com acesso total.</p>
-        <div class="f-row" style="margin-bottom:10px;">
-          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Seu nome *</label>
-          <input type="text" class="fi" id="sAdminNome" placeholder="Ex.: Maria, João...">
-        </div>
-        <div style="background:var(--creme);border-radius:10px;padding:12px;margin-bottom:10px;">
-          <div style="font-size:.72rem;color:var(--cinza);margin-bottom:8px;font-weight:700;">🔢 Escolha uma senha de 4 números</div>
-          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;" id="pinPreviewDots">
-            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
-            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
-            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
-            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
-          </div>
-          <input type="password" class="fi" id="sAdminPin" placeholder="Digite 4 números" maxlength="4"
-            inputmode="numeric" oninput="atualizarPinPreview()" style="text-align:center;font-size:1.2rem;letter-spacing:8px;">
-        </div>
-        <div class="f-row">
-          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Confirmar senha *</label>
-          <input type="password" class="fi" id="sAdminPin2" placeholder="Repita os 4 números" maxlength="4" inputmode="numeric" style="text-align:center;font-size:1.2rem;letter-spacing:8px;">
-        </div>
-        <div class="setup-nav">
-          <button class="btn-setup-back" onclick="setupBack()">← Voltar</button>
-          <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
-        </div>
-      </div>
-
-      <!-- STEP 4: CONCLUÍDO -->
-      <div class="setup-step" id="setupStep3">
-        <div style="text-align:center;padding:10px 0;">
-          <div style="font-size:4rem;margin-bottom:14px;">🎉</div>
-          <h3 style="font-size:1.1rem;margin-bottom:8px;">Tudo pronto!</h3>
-          <p style="margin-bottom:20px;color:var(--cinza);">Sua loja foi configurada com sucesso.</p>
-          <div style="background:var(--creme);border-radius:12px;padding:16px;text-align:left;margin-bottom:20px;">
-            <div id="setupResumo" style="font-size:.82rem;line-height:2;color:var(--acai);"></div>
-          </div>
-          <div style="background:#FFF5D6;border-radius:10px;padding:12px;font-size:.75rem;color:#9E6A00;margin-bottom:16px;text-align:left;">
-            💡 <strong>Dica:</strong> Vá em <strong>⚙️ Config</strong> para adicionar seus produtos com preços e fotos.
-          </div>
-          <button class="btn-setup-next" onclick="concluirSetup()" style="font-size:1rem;">
-            🚀 Entrar no sistema
-          </button>
-        </div>
-      </div>
-
     </div>
+
+    <!-- DIVISOR -->
+    <div style="border-top:1px solid var(--cinza-c);margin-bottom:18px;"></div>
+
+    <!-- NOME DA LOJA -->
+    <div style="margin-bottom:14px;">
+      <label style="font-size:.72rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;">Nome da loja *</label>
+      <input type="text" class="fi" id="sNomeLoja" placeholder="Ex.: Sorveteria da Maria, Lanchonete João..."
+        style="font-size:.95rem;font-weight:600;">
+    </div>
+
+    <!-- SEU NOME -->
+    <div style="margin-bottom:14px;">
+      <label style="font-size:.72rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;">Seu nome (administrador) *</label>
+      <input type="text" class="fi" id="sAdminNome" placeholder="Ex.: Maria, João...">
+    </div>
+
+    <!-- SENHA PIN -->
+    <div style="margin-bottom:20px;">
+      <label style="font-size:.72rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;">Crie sua senha de 4 números *</label>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;" id="pinPreviewDots">
+        <div style="width:16px;height:16px;border-radius:50%;border:2px solid var(--lilas);transition:all .2s;"></div>
+        <div style="width:16px;height:16px;border-radius:50%;border:2px solid var(--lilas);transition:all .2s;"></div>
+        <div style="width:16px;height:16px;border-radius:50%;border:2px solid var(--lilas);transition:all .2s;"></div>
+        <div style="width:16px;height:16px;border-radius:50%;border:2px solid var(--lilas);transition:all .2s;"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <input type="password" class="fi" id="sAdminPin" placeholder="••••" maxlength="4"
+          inputmode="numeric" oninput="atualizarPinPreview()"
+          style="text-align:center;font-size:1.4rem;letter-spacing:10px;flex:1;">
+        <input type="password" class="fi" id="sAdminPin2" placeholder="Repita" maxlength="4"
+          inputmode="numeric" style="text-align:center;font-size:1.4rem;letter-spacing:10px;flex:1;">
+      </div>
+      <div style="font-size:.68rem;color:var(--cinza);text-align:center;margin-top:5px;">Primeira senha · Confirmação</div>
+    </div>
+
+    <!-- BOTÃO -->
+    <button onclick="concluirPrimeiroAcesso()"
+      style="width:100%;background:linear-gradient(135deg,var(--roxo-c),var(--roxo));color:#fff;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;transition:all .2s;">
+      🚀 Criar minha loja e entrar
+    </button>
+
+    <div id="primeiroAcessoErro" style="text-align:center;color:var(--vermelho);font-size:.78rem;font-weight:700;margin-top:10px;min-height:20px;"></div>
   </div>
 </div>
 
@@ -2572,9 +2554,133 @@ window.salvarClienteAuto=function(){
 };
 
 
-// ── SETUP WIZARD ─────────────────────────────────────────────
-let setupStep = 0;
-const SETUP_TOTAL = 4;
+// ── PRIMEIRO ACESSO ──────────────────────────────────────────
+let _logoBase64 = '';
+let _logoEmoji  = '🏪';
+
+window.previewLogo=function(input){
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const imgEl=document.getElementById('logoPreviewImg');
+    const emojiEl=document.getElementById('logoPreviewEmoji');
+    imgEl.src=e.target.result; imgEl.style.display='block';
+    emojiEl.style.display='none';
+    // reduzir para 200x200
+    const img=new Image();
+    img.onload=function(){
+      const canvas=document.createElement('canvas');
+      const MAX=200; let w=img.width,h=img.height;
+      if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}
+      else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      _logoBase64=canvas.toDataURL('image/jpeg',0.85);
+      _logoEmoji='';
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.selecionarEmojiLoja=function(emoji){
+  _logoEmoji=emoji; _logoBase64='';
+  const emojiEl=document.getElementById('logoPreviewEmoji');
+  const imgEl=document.getElementById('logoPreviewImg');
+  emojiEl.textContent=emoji; emojiEl.style.display='block';
+  imgEl.style.display='none';
+  // highlight
+  document.querySelectorAll('#emojiOpcoes span').forEach(s=>{
+    s.style.background=s.textContent===emoji?'var(--lilas)':'';
+  });
+};
+
+window.atualizarPinPreview=function(){
+  const val=document.getElementById('sAdminPin').value||'';
+  const dots=document.querySelectorAll('#pinPreviewDots div');
+  dots.forEach((d,i)=>{
+    d.style.background=i<val.length?'var(--roxo)':'';
+    d.style.borderColor=i<val.length?'var(--roxo)':'var(--lilas)';
+  });
+};
+
+window.concluirPrimeiroAcesso=async function(){
+  const nome=document.getElementById('sNomeLoja').value.trim();
+  const adminNome=document.getElementById('sAdminNome').value.trim();
+  const pin=document.getElementById('sAdminPin').value.trim();
+  const pin2=document.getElementById('sAdminPin2').value.trim();
+  const erroEl=document.getElementById('primeiroAcessoErro');
+
+  if(!nome){ erroEl.textContent='Digite o nome da sua loja.'; return; }
+  if(!adminNome){ erroEl.textContent='Digite seu nome.'; return; }
+  if(pin.length!==4||!/^\d{4}$/.test(pin)){ erroEl.textContent='A senha deve ter 4 números.'; return; }
+  if(pin!==pin2){ erroEl.textContent='As senhas não conferem.'; return; }
+  erroEl.textContent='';
+
+  const btn=document.querySelector('#primeiroAcesso button');
+  btn.textContent='⏳ Criando sua loja...'; btn.disabled=true;
+
+  try{
+    // Salvar config da loja
+    const cfgInicial={
+      nome, taxa:5, wpp:'', numPed:1,
+      logoBase64:_logoBase64||'', logoEmoji:_logoEmoji||'🏪',
+      setupConcluido:true, criadoEm:new Date().toISOString(),
+      categorias:[
+        {id:'cat1',nome:'Categoria 1',emoji:'🛍️',fidelidade:true},
+        {id:'cat2',nome:'Categoria 2',emoji:'🏷️',fidelidade:false}
+      ],
+      produtos:[]
+    };
+    await set(lRef('config'), cfgInicial);
+
+    // Criar admin
+    await push(lRef('operadores'),{
+      nome:adminNome, pin, perfil:'admin',
+      permissoes:PERMS_ADMIN, ativo:true,
+      criadoEm:new Date().toISOString()
+    });
+
+    // Marcar licença como configurada
+    if(cfg._licencaKey){
+      await update(ref(db,'licencas/'+cfg._licencaKey),{
+        setupConcluido:true, nomeLoja:nome
+      });
+    }
+
+    // Aplicar no sistema
+    cfg={...cfg,...cfgInicial};
+
+    // Atualizar logo e nome na UI
+    atualizarLogoUI(nome, _logoBase64, _logoEmoji);
+
+    // Fechar tela e entrar direto como admin
+    document.getElementById('primeiroAcesso').style.display='none';
+    const op={nome:adminNome,perfil:'admin',permissoes:PERMS_ADMIN};
+    entrarComoOperador({...op,_key:'admin'});
+
+  } catch(e){
+    console.error(e);
+    erroEl.textContent='Erro ao salvar. Verifique sua conexão.';
+    btn.textContent='🚀 Criar minha loja e entrar'; btn.disabled=false;
+  }
+};
+
+function atualizarLogoUI(nome, logoBase64, logoEmoji){
+  // Header logo
+  const ln=document.getElementById('logoNome'); if(ln) ln.textContent=nome;
+  const lln=document.getElementById('loginNome'); if(lln) lln.textContent=nome;
+  document.title=nome+' — PDV';
+  // Ícone no header
+  const ico=document.querySelector('.logo-icon');
+  if(ico){
+    if(logoBase64){
+      ico.innerHTML=`<img src="${logoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else if(logoEmoji){
+      ico.textContent=logoEmoji;
+    }
+  }
+}
 let setupCats = [
   {emoji:'🛍️', nome:'Categoria 1', fidelidade:true},
   {emoji:'🏷️', nome:'Categoria 2', fidelidade:false}
@@ -2823,7 +2929,8 @@ function entrarComoOperador(op){
   document.getElementById('opBadge').style.display='flex';
   document.getElementById('opBadgeAvatar').textContent=op.nome.charAt(0).toUpperCase();
   document.getElementById('opBadgeNome').textContent=op.nome;
-  aplicarPermissoesTabs();
+  // atualizar logo com dados da loja
+  atualizarLogoUI(cfg.nome||'PDV Pro', cfg.logoBase64||'', cfg.logoEmoji||'🏪');
   // Iniciar listeners agora que temos operador logado
   try{
     iniciarListeners();
@@ -4589,49 +4696,44 @@ function mostrarBloqueio(ico, titulo, msg, mostrarContato=false){
 const licOk = await verificarLicenca();
 if(!licOk) return;
 
-// 2. Verificar se loja já fez setup (config existe no Firebase)
-initSetupDots();
 try{
   const snap = await get(lRef('config'));
-  if(snap.exists() && snap.val().setupConcluido){
-    // Já configurado — carregar dados da loja
+  if(snap.exists()){
+    // Carregar config da loja
     const cfgLoja = snap.val();
     cfg = {...cfg, ...cfgLoja};
     if(cfg.produtos && !Array.isArray(cfg.produtos)) cfg.produtos=Object.values(cfg.produtos).filter(Boolean);
     if(cfg.categorias && !Array.isArray(cfg.categorias)) cfg.categorias=Object.values(cfg.categorias).filter(Boolean);
-    // atualizar logo
-    const nomeLoja = cfg.nome||'PDV Pro';
-    const ln=document.getElementById('logoNome'); if(ln) ln.textContent=nomeLoja;
-    const ls=document.getElementById('logoSub'); if(ls) ls.textContent=cfg.subtitulo||'PDV & Financeiro';
-    const lln=document.getElementById('loginNome'); if(lln) lln.textContent=nomeLoja;
-    document.title=nomeLoja+' — PDV';
-    // Mostrar tela de login explicitamente
-    document.getElementById('loginScreen').style.display='flex';
-    // Carregar operadores para popular a tela de login
-    try{
-      const opsSnap = await get(lRef('operadores'));
-      operadores={};
-      if(opsSnap.exists()) operadores=opsSnap.val();
-      renderLoginOps();
-    }catch(e){ renderLoginOps(); }
   } else {
-    // Primeira vez — mostrar Setup Wizard
-    document.getElementById('setupWizard').classList.add('show');
-    renderSetupCats();
-    return; // listeners serão iniciados pelo concluirSetup
+    // Primeira vez — mostrar tela de primeiro acesso
+    document.getElementById('primeiroAcesso').style.display='flex';
+    return;
   }
 } catch(e){
-  // Sem conexão — mostrar com dados padrão
-  console.warn('Sem conexão Firebase, usando dados padrão');
+  console.warn('Sem conexão Firebase:', e);
 }
 
-// 3. Renderizar app base (sem dados ainda — vêm após login)
+// 2. Atualizar logo com nome da loja
+const nomeLoja = cfg.nome||'PDV Pro';
+const ln=document.getElementById('logoNome'); if(ln) ln.textContent=nomeLoja;
+const ls=document.getElementById('logoSub'); if(ls) ls.textContent=cfg.subtitulo||'PDV & Financeiro';
+const lln=document.getElementById('loginNome'); if(lln) lln.textContent=nomeLoja;
+document.title=nomeLoja+' — PDV';
+
+// 3. Carregar operadores e mostrar tela de login
+try{
+  const opsSnap = await get(lRef('operadores'));
+  operadores={};
+  if(opsSnap.exists()) operadores=opsSnap.val();
+} catch(e){}
+renderLoginOps();
+document.getElementById('loginScreen').style.display='flex';
+
+// 4. Renderizar app base
 renderProd();
 renderItens();
 document.getElementById('lVenc').value=new Date().toISOString().split('T')[0];
 document.getElementById('qData').value=new Date().toISOString().split('T')[0];
-
-// 4. Listeners e aviso de sync são iniciados após o login do operador
 
 })(); // fim init async
 </script>
