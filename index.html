@@ -24,7 +24,8 @@ header{background:linear-gradient(135deg,var(--roxo-e),var(--roxo));color:#fff;p
 .tab{padding:9px 14px;color:rgba(255,255,255,.55);cursor:pointer;font-size:.78rem;font-weight:700;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;user-select:none;}
 .tab.active{color:#fff;border-bottom-color:#C084FC;}
 .tab:hover:not(.active){color:rgba(255,255,255,.85);}
-/* PAGES */
+/* ESCONDER APP ATÉ VERIFICAÇÃO */
+header,nav,.page,#tab-venda{visibility:hidden;}
 .page{display:none;padding:18px;max-width:1120px;margin:0 auto;}
 .page.active{display:block;}
 /* CARDS */
@@ -2622,60 +2623,76 @@ window.concluirPrimeiroAcesso=async function(){
   if(pin!==pin2){ erroEl.textContent='As senhas não conferem.'; return; }
   erroEl.textContent='';
 
-  const btn=document.querySelector('#primeiroAcesso button');
-  btn.textContent='⏳ Criando sua loja...'; btn.disabled=true;
+  const btn=document.querySelector('#primeiroAcesso button[onclick="concluirPrimeiroAcesso()"]');
+  if(btn){ btn.textContent='⏳ Criando sua loja...'; btn.disabled=true; }
 
   try{
     // Salvar config da loja
     const cfgInicial={
       nome, taxa:5, wpp:'', numPed:1,
-      logoBase64:_logoBase64||'', logoEmoji:_logoEmoji||'🏪',
-      setupConcluido:true, criadoEm:new Date().toISOString(),
+      logoBase64:_logoBase64||'',
+      logoEmoji:_logoEmoji||'🏪',
+      setupConcluido:true,
+      criadoEm:new Date().toISOString(),
       categorias:[
         {id:'cat1',nome:'Categoria 1',emoji:'🛍️',fidelidade:true},
         {id:'cat2',nome:'Categoria 2',emoji:'🏷️',fidelidade:false}
       ],
       produtos:[]
     };
+
     await set(lRef('config'), cfgInicial);
+    cfg={...cfg,...cfgInicial};
 
     // Criar admin
     await push(lRef('operadores'),{
-      nome:adminNome, pin, perfil:'admin',
-      permissoes:PERMS_ADMIN, ativo:true,
+      nome:adminNome, pin,
+      perfil:'admin',
+      permissoes:PERMS_ADMIN,
+      ativo:true,
       criadoEm:new Date().toISOString()
     });
 
-    // Marcar licença como configurada
-    if(cfg._licencaKey){
-      await update(ref(db,'licencas/'+cfg._licencaKey),{
-        setupConcluido:true, nomeLoja:nome
-      });
-    }
-
-    // Aplicar no sistema
-    cfg={...cfg,...cfgInicial};
-
-    // Atualizar logo e nome na UI
-    atualizarLogoUI(nome, _logoBase64, _logoEmoji);
-
-    // Fechar tela de primeiro acesso e mostrar login
-    document.getElementById('primeiroAcesso').style.display='none';
-
-    // Carregar operadores e mostrar tela de login
+    // Marcar licença como configurada no Firebase SaaS
     try{
-      const opsSnap2 = await get(lRef('operadores'));
-      operadores={};
-      if(opsSnap2.exists()) operadores=opsSnap2.val();
-    }catch(e){}
+      if(cfg._licencaKey){
+        const {getDatabase:gdb2,ref:r3,update:u3}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
+        const {getApp:ga2}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+        const saasDb2=gdb2(ga2('saas'));
+        await u3(r3(saasDb2,'licencas/'+cfg._licencaKey),{setupConcluido:true,nomeLoja:nome});
+      }
+    }catch(e2){ console.warn('Erro ao atualizar licença:',e2); }
+
+    // Atualizar logo na UI
     atualizarLogoUI(nome, _logoBase64, _logoEmoji);
+
+    // Carregar operadores recém criados
+    try{
+      const opsSnap=await get(lRef('operadores'));
+      operadores={};
+      if(opsSnap.exists()) operadores=opsSnap.val();
+    }catch(e){}
+
+    // Fechar tela e mostrar login
+    document.getElementById('primeiroAcesso').style.display='none';
     renderLoginOps();
     document.getElementById('loginScreen').style.display='flex';
 
+    // Iniciar listeners em background
+    setTimeout(()=>{
+      try{
+        iniciarListeners();
+        iniciarListenerCampanhas();
+        iniciarListenerOperadores();
+      }catch(e){}
+    },200);
+
+    toast(`Loja criada! Bem-vinda, ${adminNome}! 🎉`,'verde');
+
   } catch(e){
-    console.error(e);
-    erroEl.textContent='Erro ao salvar. Verifique sua conexão.';
-    btn.textContent='🚀 Criar minha loja e entrar'; btn.disabled=false;
+    console.error('Erro ao criar loja:',e);
+    erroEl.textContent='Erro ao salvar: '+e.message+'. Verifique sua conexão.';
+    if(btn){ btn.textContent='🚀 Criar minha loja e entrar'; btn.disabled=false; }
   }
 };
 
@@ -2938,6 +2955,8 @@ function validarPin(){
 
 function entrarComoOperador(op){
   opAtual=op;
+  // Revelar o app
+  document.querySelectorAll('header,nav,.page').forEach(el=>el.style.visibility='visible');
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('opBadge').style.display='flex';
   document.getElementById('opBadgeAvatar').textContent=op.nome.charAt(0).toUpperCase();
