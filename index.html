@@ -4668,19 +4668,20 @@ async function verificarLicenca(){
     cfg._licencaCodigo = codigo;
     cfg._licencaKey = licenca._key;
     cfg._licencaNome = licenca.nome;
-    // Atualizar logo com o nome da empresa do cliente
     if(licenca.nome){
       const ln=document.getElementById('logoNome'); if(ln)ln.textContent=licenca.nome;
       const ll=document.getElementById('loginNome'); if(ll)ll.textContent=licenca.nome;
       document.title=licenca.nome+' — PDV';
     }
     screen.classList.remove('show','verificando','bloqueada');
+    // Esconder loading — próximo passo é verificar config/operadores
+    const l=document.getElementById('loadingInicial'); if(l)l.style.display='none';
     return true;
 
   } catch(err){
     console.error('Erro na verificação:',err);
-    // Em caso de erro de rede, permitir acesso temporário
     screen.classList.remove('show','verificando');
+    const l=document.getElementById('loadingInicial'); if(l)l.style.display='none';
     toast('⚠️ Sem conexão — modo offline','vermelho');
     return true;
   }
@@ -4709,14 +4710,17 @@ function mostrarBloqueio(ico, titulo, msg, mostrarContato=false){
 const licOk = await verificarLicenca();
 if(!licOk) return;
 
-// 2. Checar config e operadores no Firebase — AGUARDAR RESPOSTA
+// 2. Checar config e operadores no Firebase — com timeout de 8s
 let temConfig = false;
 let temOperadores = false;
 
 try{
-  const [snapCfg, snapOps] = await Promise.all([
-    get(lRef('config')),
-    get(lRef('operadores'))
+  // Timeout de 8 segundos
+  const timeout = new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),8000));
+
+  const [snapCfg, snapOps] = await Promise.race([
+    Promise.all([get(lRef('config')), get(lRef('operadores'))]),
+    timeout.then(()=>{ throw new Error('timeout'); })
   ]);
 
   if(snapCfg.exists()){
@@ -4733,14 +4737,14 @@ try{
   }
 
 } catch(e){
-  console.warn('Erro Firebase:', e);
+  console.warn('Firebase timeout ou erro:', e);
+  // Em caso de timeout — mostrar tela de configuração por segurança
 }
 
 // 3. Decidir qual tela mostrar
 const hideLoading=()=>{ const l=document.getElementById('loadingInicial'); if(l)l.style.display='none'; };
 
 if(!temConfig || !temOperadores){
-  // Primeira vez ou sem operadores — tela de configuração
   hideLoading();
   document.getElementById('primeiroAcesso').style.display='flex';
   return;
