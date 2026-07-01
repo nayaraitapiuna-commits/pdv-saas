@@ -2735,7 +2735,7 @@ function temPermissao(perm){
 
 // Listener de operadores
 function iniciarListenerOperadores(){
-  onValue(ref(db,'operadores'),snap=>{
+  onValue(lRef('operadores'),snap=>{
     operadores={};
     if(snap.exists()) operadores=snap.val();
     renderLoginOps();
@@ -3015,7 +3015,7 @@ let campanhas={};
 
 // Listener Firebase para campanhas
 function iniciarListenerCampanhas(){
-  onValue(ref(db,'campanhas'),snap=>{
+  onValue(lRef('campanhas'),snap=>{
     campanhas={};
     if(snap.exists()) campanhas=snap.val();
     const tabAtiva=document.querySelector('.tab.active');
