@@ -689,7 +689,7 @@ header{background:linear-gradient(135deg,var(--roxo-e),var(--roxo));color:#fff;p
 </div>
 
 <!-- TELA DE LOGIN -->
-<div id="loginScreen">
+<div id="loginScreen" style="display:none;">
   <div class="login-box">
     <div class="login-logo">
       <div class="ico">🍇</div>
@@ -2819,14 +2819,20 @@ function validarPin(){
 
 function entrarComoOperador(op){
   opAtual=op;
-  // esconder tela de login
   document.getElementById('loginScreen').style.display='none';
-  // atualizar badge no header
   document.getElementById('opBadge').style.display='flex';
   document.getElementById('opBadgeAvatar').textContent=op.nome.charAt(0).toUpperCase();
   document.getElementById('opBadgeNome').textContent=op.nome;
-  // aplicar permissões nas tabs
   aplicarPermissoesTabs();
+  // Iniciar listeners agora que temos operador logado
+  try{
+    iniciarListeners();
+    iniciarListenerCampanhas();
+    iniciarListenerOperadores();
+  }catch(e){}
+  renderProd();
+  renderItens();
+  document.getElementById('numPed').textContent=String(cfg.numPed||1).padStart(3,'0');
   toast(`Bem-vinda, ${op.nome}! 👋`,'verde');
 }
 
@@ -4594,10 +4600,20 @@ try{
     if(cfg.produtos && !Array.isArray(cfg.produtos)) cfg.produtos=Object.values(cfg.produtos).filter(Boolean);
     if(cfg.categorias && !Array.isArray(cfg.categorias)) cfg.categorias=Object.values(cfg.categorias).filter(Boolean);
     // atualizar logo
-    const ln=document.getElementById('logoNome'); if(ln) ln.textContent=cfg.nome||'PDV Pro';
+    const nomeLoja = cfg.nome||'PDV Pro';
+    const ln=document.getElementById('logoNome'); if(ln) ln.textContent=nomeLoja;
     const ls=document.getElementById('logoSub'); if(ls) ls.textContent=cfg.subtitulo||'PDV & Financeiro';
-    const lln=document.getElementById('loginNome'); if(lln) lln.textContent=cfg.nome||'PDV Pro';
-    document.title=(cfg.nome||'PDV Pro')+' — PDV';
+    const lln=document.getElementById('loginNome'); if(lln) lln.textContent=nomeLoja;
+    document.title=nomeLoja+' — PDV';
+    // Mostrar tela de login explicitamente
+    document.getElementById('loginScreen').style.display='flex';
+    // Carregar operadores para popular a tela de login
+    try{
+      const opsSnap = await get(lRef('operadores'));
+      operadores={};
+      if(opsSnap.exists()) operadores=opsSnap.val();
+      renderLoginOps();
+    }catch(e){ renderLoginOps(); }
   } else {
     // Primeira vez — mostrar Setup Wizard
     document.getElementById('setupWizard').classList.add('show');
@@ -4609,30 +4625,13 @@ try{
   console.warn('Sem conexão Firebase, usando dados padrão');
 }
 
-// 3. Renderizar app com dados já carregados
+// 3. Renderizar app base (sem dados ainda — vêm após login)
 renderProd();
 renderItens();
 document.getElementById('lVenc').value=new Date().toISOString().split('T')[0];
 document.getElementById('qData').value=new Date().toISOString().split('T')[0];
-document.getElementById('numPed').textContent=String(cfg.numPed||1).padStart(3,'0');
 
-// 4. Conectar listeners Firebase em background
-setTimeout(()=>{
-  try{
-    iniciarListeners();
-    iniciarListenerCampanhas();
-    iniciarListenerOperadores();
-  }catch(e){ console.warn('Firebase erro:',e); }
-}, 100);
-
-// 5. Aviso se Firebase demorar
-setTimeout(()=>{
-  const s=document.getElementById('statusFb');
-  if(s&&s.textContent.includes('Conectando')){
-    s.textContent='● Sem sync';
-    s.style.background='rgba(231,76,60,.35)';
-  }
-},5000);
+// 4. Listeners e aviso de sync são iniciados após o login do operador
 
 })(); // fim init async
 </script>
