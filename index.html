@@ -2624,10 +2624,22 @@ window.concluirPrimeiroAcesso=async function(){
   erroEl.textContent='';
 
   const btn=document.querySelector('#primeiroAcesso button[onclick="concluirPrimeiroAcesso()"]');
-  if(btn){ btn.textContent='⏳ Criando sua loja...'; btn.disabled=true; }
+  if(btn){ btn.textContent='⏳ Salvando...'; btn.disabled=true; }
+
+  // Pegar código da URL diretamente como garantia
+  const codigoURL = new URLSearchParams(window.location.search).get('licenca');
+  const codigo = cfg._licencaCodigo || codigoURL;
+
+  if(!codigo){
+    erroEl.textContent='Erro: código de licença não encontrado. Reabra o link.';
+    if(btn){ btn.textContent='🚀 Criar minha loja e entrar'; btn.disabled=false; }
+    return;
+  }
+
+  // Caminhos diretos no Firebase (sem depender do lRef)
+  const basePath = 'lojas/'+codigo+'/';
 
   try{
-    // Salvar config da loja
     const cfgInicial={
       nome, taxa:5, wpp:'', numPed:1,
       logoBase64:_logoBase64||'',
@@ -2641,37 +2653,24 @@ window.concluirPrimeiroAcesso=async function(){
       produtos:[]
     };
 
-    await set(lRef('config'), cfgInicial);
-    cfg={...cfg,...cfgInicial};
-
-    // Criar admin
-    await push(lRef('operadores'),{
-      nome:adminNome, pin,
-      perfil:'admin',
-      permissoes:PERMS_ADMIN,
-      ativo:true,
+    // Salvar usando ref direto
+    await set(ref(db, basePath+'config'), cfgInicial);
+    await push(ref(db, basePath+'operadores'),{
+      nome:adminNome, pin, perfil:'admin',
+      permissoes:PERMS_ADMIN, ativo:true,
       criadoEm:new Date().toISOString()
     });
 
-    // Marcar licença como configurada no Firebase SaaS
-    try{
-      if(cfg._licencaKey){
-        const {getDatabase:gdb2,ref:r3,update:u3}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
-        const {getApp:ga2}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-        const saasDb2=gdb2(ga2('saas'));
-        await u3(r3(saasDb2,'licencas/'+cfg._licencaKey),{setupConcluido:true,nomeLoja:nome});
-      }
-    }catch(e2){ console.warn('Erro ao atualizar licença:',e2); }
+    // Atualizar cfg local
+    cfg={...cfg,...cfgInicial, _licencaCodigo:codigo};
 
     // Atualizar logo na UI
     atualizarLogoUI(nome, _logoBase64, _logoEmoji);
 
     // Carregar operadores recém criados
-    try{
-      const opsSnap=await get(lRef('operadores'));
-      operadores={};
-      if(opsSnap.exists()) operadores=opsSnap.val();
-    }catch(e){}
+    const opsSnap=await get(ref(db, basePath+'operadores'));
+    operadores={};
+    if(opsSnap.exists()) operadores=opsSnap.val();
 
     // Fechar tela e mostrar login
     document.getElementById('primeiroAcesso').style.display='none';
@@ -2680,18 +2679,14 @@ window.concluirPrimeiroAcesso=async function(){
 
     // Iniciar listeners em background
     setTimeout(()=>{
-      try{
-        iniciarListeners();
-        iniciarListenerCampanhas();
-        iniciarListenerOperadores();
-      }catch(e){}
+      try{ iniciarListeners(); iniciarListenerCampanhas(); iniciarListenerOperadores(); }catch(e){}
     },200);
 
     toast(`Loja criada! Bem-vinda, ${adminNome}! 🎉`,'verde');
 
   } catch(e){
     console.error('Erro ao criar loja:',e);
-    erroEl.textContent='Erro ao salvar: '+e.message+'. Verifique sua conexão.';
+    erroEl.textContent='Erro: '+e.message;
     if(btn){ btn.textContent='🚀 Criar minha loja e entrar'; btn.disabled=false; }
   }
 };
