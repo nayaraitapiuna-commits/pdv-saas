@@ -4726,6 +4726,13 @@ try{
   operadores={};
   if(opsSnap.exists()) operadores=opsSnap.val();
 } catch(e){}
+
+// Se não tem operadores, volta para primeiro acesso
+if(!Object.keys(operadores).length){
+  document.getElementById('primeiroAcesso').style.display='flex';
+  return;
+}
+
 renderLoginOps();
 document.getElementById('loginScreen').style.display='flex';
 
