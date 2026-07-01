@@ -572,7 +572,12 @@ header{background:linear-gradient(135deg,var(--roxo-e),var(--roxo));color:#fff;p
 </head>
 <body>
 
-<!-- LOADING -->
+<!-- TELA DE CARREGANDO (sempre visível até o init decidir o que mostrar) -->
+<div id="loadingInicial" style="position:fixed;inset:0;background:linear-gradient(135deg,var(--roxo-e),var(--roxo));z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:#fff;">
+  <div style="font-size:3rem;">🍇</div>
+  <div style="width:40px;height:40px;border:4px solid rgba(255,255,255,.2);border-top-color:#C084FC;border-radius:50%;animation:spin .8s linear infinite;"></div>
+  <div style="font-size:.85rem;opacity:.7;">Verificando acesso...</div>
+</div>
 
 <!-- TELA DE PRIMEIRO ACESSO -->
 <div id="primeiroAcesso" style="display:none;position:fixed;inset:0;background:linear-gradient(135deg,var(--roxo-e),var(--roxo));z-index:9998;align-items:center;justify-content:center;padding:20px;overflow-y:auto;">
@@ -2654,10 +2659,18 @@ window.concluirPrimeiroAcesso=async function(){
     // Atualizar logo e nome na UI
     atualizarLogoUI(nome, _logoBase64, _logoEmoji);
 
-    // Fechar tela e entrar direto como admin
+    // Fechar tela de primeiro acesso e mostrar login
     document.getElementById('primeiroAcesso').style.display='none';
-    const op={nome:adminNome,perfil:'admin',permissoes:PERMS_ADMIN};
-    entrarComoOperador({...op,_key:'admin'});
+
+    // Carregar operadores e mostrar tela de login
+    try{
+      const opsSnap2 = await get(lRef('operadores'));
+      operadores={};
+      if(opsSnap2.exists()) operadores=opsSnap2.val();
+    }catch(e){}
+    atualizarLogoUI(nome, _logoBase64, _logoEmoji);
+    renderLoginOps();
+    document.getElementById('loginScreen').style.display='flex';
 
   } catch(e){
     console.error(e);
@@ -4696,47 +4709,64 @@ function mostrarBloqueio(ico, titulo, msg, mostrarContato=false){
 const licOk = await verificarLicenca();
 if(!licOk) return;
 
+// 2. Checar config e operadores no Firebase — AGUARDAR RESPOSTA
+let temConfig = false;
+let temOperadores = false;
+
 try{
-  const snap = await get(lRef('config'));
-  if(snap.exists()){
-    // Carregar config da loja
-    const cfgLoja = snap.val();
+  const [snapCfg, snapOps] = await Promise.all([
+    get(lRef('config')),
+    get(lRef('operadores'))
+  ]);
+
+  if(snapCfg.exists()){
+    temConfig = true;
+    const cfgLoja = snapCfg.val();
     cfg = {...cfg, ...cfgLoja};
     if(cfg.produtos && !Array.isArray(cfg.produtos)) cfg.produtos=Object.values(cfg.produtos).filter(Boolean);
     if(cfg.categorias && !Array.isArray(cfg.categorias)) cfg.categorias=Object.values(cfg.categorias).filter(Boolean);
-  } else {
-    // Primeira vez — mostrar tela de primeiro acesso
-    document.getElementById('primeiroAcesso').style.display='flex';
-    return;
   }
+
+  if(snapOps.exists() && Object.keys(snapOps.val()||{}).length > 0){
+    temOperadores = true;
+    operadores = snapOps.val();
+  }
+
 } catch(e){
-  console.warn('Sem conexão Firebase:', e);
+  console.warn('Erro Firebase:', e);
 }
 
-// 2. Atualizar logo com nome da loja
+// 3. Decidir qual tela mostrar
+const hideLoading=()=>{ const l=document.getElementById('loadingInicial'); if(l)l.style.display='none'; };
+
+if(!temConfig || !temOperadores){
+  // Primeira vez ou sem operadores — tela de configuração
+  hideLoading();
+  document.getElementById('primeiroAcesso').style.display='flex';
+  return;
+}
+
+// 4. Tem config e operadores — mostrar tela de login
+hideLoading();
 const nomeLoja = cfg.nome||'PDV Pro';
 const ln=document.getElementById('logoNome'); if(ln) ln.textContent=nomeLoja;
 const ls=document.getElementById('logoSub'); if(ls) ls.textContent=cfg.subtitulo||'PDV & Financeiro';
 const lln=document.getElementById('loginNome'); if(lln) lln.textContent=nomeLoja;
 document.title=nomeLoja+' — PDV';
 
-// 3. Carregar operadores e mostrar tela de login
-try{
-  const opsSnap = await get(lRef('operadores'));
-  operadores={};
-  if(opsSnap.exists()) operadores=opsSnap.val();
-} catch(e){}
-
-// Se não tem operadores, volta para primeiro acesso
-if(!Object.keys(operadores).length){
-  document.getElementById('primeiroAcesso').style.display='flex';
-  return;
+// Atualizar logo
+if(cfg.logoBase64){
+  const ico=document.querySelector('.logo-icon');
+  if(ico) ico.innerHTML=`<img src="${cfg.logoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+} else if(cfg.logoEmoji){
+  const ico=document.querySelector('.logo-icon');
+  if(ico) ico.textContent=cfg.logoEmoji;
 }
 
 renderLoginOps();
 document.getElementById('loginScreen').style.display='flex';
 
-// 4. Renderizar app base
+// 5. Renderizar app base
 renderProd();
 renderItens();
 document.getElementById('lVenc').value=new Date().toISOString().split('T')[0];
