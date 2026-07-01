@@ -578,80 +578,95 @@ header{background:linear-gradient(135deg,var(--roxo-e),var(--roxo));color:#fff;p
 <div id="setupWizard">
   <div class="setup-box">
     <div class="setup-header">
-      <h2>🚀 Configuração Inicial</h2>
-      <p>Vamos configurar seu sistema em poucos passos</p>
+      <h2>🎉 Bem-vindo ao PDV Pro!</h2>
+      <p>Configure sua loja em menos de 2 minutos</p>
       <div class="setup-steps" id="setupStepDots"></div>
     </div>
     <div class="setup-body">
 
-      <!-- STEP 1: FIREBASE -->
+      <!-- STEP 1: NOME DA LOJA -->
       <div class="setup-step active" id="setupStep0">
-        <h3>1. Banco de Dados (Firebase)</h3>
-        <p>Cole aqui as credenciais do seu projeto Firebase. Acesse <strong>console.firebase.google.com</strong> → seu projeto → ⚙️ Configurações → Seus apps.</p>
-        <input class="setup-firebase-input" id="sApiKey" placeholder="apiKey: AIzaSy...">
-        <input class="setup-firebase-input" id="sAuthDomain" placeholder="authDomain: seu-projeto.firebaseapp.com">
-        <input class="setup-firebase-input" id="sDatabaseURL" placeholder="databaseURL: https://seu-projeto-default-rtdb.firebaseio.com">
-        <input class="setup-firebase-input" id="sProjectId" placeholder="projectId: seu-projeto">
-        <input class="setup-firebase-input" id="sAppId" placeholder="appId: 1:123456789:web:abc...">
-        <div style="font-size:.7rem;color:var(--cinza);margin-top:4px;">💡 Essas informações ficam salvas no seu arquivo e não são compartilhadas.</div>
-        <div class="setup-nav">
-          <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
-        </div>
-      </div>
-
-      <!-- STEP 2: NOME DA LOJA -->
-      <div class="setup-step" id="setupStep1">
-        <h3>2. Identidade da Loja</h3>
-        <p>Como seu estabelecimento vai aparecer no sistema e nos recibos?</p>
+        <h3>🏪 Como se chama sua loja?</h3>
+        <p>Esse nome vai aparecer no sistema, nos recibos e na tela de login.</p>
         <div class="setup-preview">
           <div class="setup-preview-nome" id="previewNome">Minha Loja</div>
           <div class="setup-preview-sub" id="previewSub">Sistema de Vendas</div>
         </div>
-        <div class="f-row"><label>Nome da loja</label><input type="text" class="fi" id="sNomeLoja" placeholder="Ex.: Sorveteria da Maria" oninput="document.getElementById('previewNome').textContent=this.value||'Minha Loja'"></div>
-        <div class="f-row"><label>Subtítulo (opcional)</label><input type="text" class="fi" id="sSubtitulo" placeholder="Ex.: Gelados & Bebidas" oninput="document.getElementById('previewSub').textContent=this.value||'Sistema de Vendas'"></div>
-        <div class="f-row"><label>WhatsApp (com DDD, sem espaços)</label><input type="text" class="fi" id="sWpp" placeholder="85900000000"></div>
+        <div class="f-row" style="margin-bottom:10px;">
+          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Nome da loja *</label>
+          <input type="text" class="fi" id="sNomeLoja" placeholder="Ex.: Sorveteria da Maria, Lanchonete do João..."
+            oninput="document.getElementById('previewNome').textContent=this.value||'Minha Loja'">
+        </div>
+        <div class="f-row" style="margin-bottom:10px;">
+          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Tipo de negócio (opcional)</label>
+          <input type="text" class="fi" id="sSubtitulo" placeholder="Ex.: Açaí & Gelados, Lanchonete, Pizzaria..."
+            oninput="document.getElementById('previewSub').textContent=this.value||'Sistema de Vendas'">
+        </div>
+        <div class="f-row" style="margin-bottom:10px;">
+          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">WhatsApp para recibos (com DDD)</label>
+          <input type="text" class="fi" id="sWpp" placeholder="85912345678">
+        </div>
         <div class="setup-nav">
-          <button class="btn-setup-back" onclick="setupBack()">← Voltar</button>
           <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
         </div>
       </div>
 
-      <!-- STEP 3: CATEGORIAS -->
-      <div class="setup-step" id="setupStep2">
-        <h3>3. Categorias de Produtos</h3>
-        <p>Defina as categorias do seu cardápio. Você pode adicionar, editar e remover depois em ⚙️ Config.</p>
+      <!-- STEP 2: CATEGORIAS -->
+      <div class="setup-step" id="setupStep1">
+        <h3>📦 Quais são seus produtos?</h3>
+        <p>Crie as categorias do seu cardápio. Você pode mudar isso depois a qualquer momento.</p>
         <div id="setupCatsLista"></div>
-        <button class="btn-setup-add" onclick="addSetupCat()">+ Nova categoria</button>
+        <button class="btn-setup-add" onclick="addSetupCat()">+ Adicionar categoria</button>
         <div class="setup-nav">
           <button class="btn-setup-back" onclick="setupBack()">← Voltar</button>
           <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
         </div>
       </div>
 
-      <!-- STEP 4: PRIMEIRO ADMIN -->
-      <div class="setup-step" id="setupStep3">
-        <h3>4. Criar Administrador</h3>
-        <p>O administrador tem acesso total ao sistema e gerencia os operadores.</p>
-        <div class="f-row"><label>Seu nome</label><input type="text" class="fi" id="sAdminNome" placeholder="Ex.: Maria"></div>
-        <div class="f-row"><label>PIN de 4 dígitos</label><input type="password" class="fi" id="sAdminPin" placeholder="••••" maxlength="4" inputmode="numeric"></div>
-        <div class="f-row"><label>Confirmar PIN</label><input type="password" class="fi" id="sAdminPin2" placeholder="••••" maxlength="4" inputmode="numeric"></div>
-        <div class="setup-nav">
-          <button class="btn-setup-back" onclick="setupBack()">← Voltar</button>
-          <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
+      <!-- STEP 3: SENHA DO ADMINISTRADOR -->
+      <div class="setup-step" id="setupStep2">
+        <h3>🔐 Crie sua senha de acesso</h3>
+        <p>Essa senha protege o sistema. Você é o administrador com acesso total.</p>
+        <div class="f-row" style="margin-bottom:10px;">
+          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Seu nome *</label>
+          <input type="text" class="fi" id="sAdminNome" placeholder="Ex.: Maria, João...">
         </div>
-      </div>
-
-      <!-- STEP 5: CONCLUÍDO -->
-      <div class="setup-step" id="setupStep4">
-        <div style="text-align:center;padding:10px 0;">
-          <div style="font-size:3.5rem;margin-bottom:12px;">🎉</div>
-          <h3 style="font-size:1.1rem;margin-bottom:8px;">Tudo pronto!</h3>
-          <p style="margin-bottom:20px;">Seu sistema está configurado. Você pode personalizar produtos, preços e muito mais em <strong>⚙️ Config</strong>.</p>
-          <div style="background:var(--creme);border-radius:10px;padding:14px;text-align:left;margin-bottom:16px;font-size:.78rem;">
-            <div style="font-weight:700;margin-bottom:8px;">✅ O que foi configurado:</div>
-            <div id="setupResumo" style="color:var(--cinza);line-height:1.8;"></div>
+        <div style="background:var(--creme);border-radius:10px;padding:12px;margin-bottom:10px;">
+          <div style="font-size:.72rem;color:var(--cinza);margin-bottom:8px;font-weight:700;">🔢 Escolha uma senha de 4 números</div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;" id="pinPreviewDots">
+            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
+            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
+            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
+            <div style="width:18px;height:18px;border-radius:50%;border:2px solid var(--lilas);"></div>
           </div>
-          <button class="btn-setup-next" onclick="concluirSetup()">🚀 Entrar no Sistema</button>
+          <input type="password" class="fi" id="sAdminPin" placeholder="Digite 4 números" maxlength="4"
+            inputmode="numeric" oninput="atualizarPinPreview()" style="text-align:center;font-size:1.2rem;letter-spacing:8px;">
+        </div>
+        <div class="f-row">
+          <label style="font-size:.75rem;font-weight:700;color:var(--cinza);display:block;margin-bottom:4px;">Confirmar senha *</label>
+          <input type="password" class="fi" id="sAdminPin2" placeholder="Repita os 4 números" maxlength="4" inputmode="numeric" style="text-align:center;font-size:1.2rem;letter-spacing:8px;">
+        </div>
+        <div class="setup-nav">
+          <button class="btn-setup-back" onclick="setupBack()">← Voltar</button>
+          <button class="btn-setup-next" onclick="setupNext()">Próximo →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: CONCLUÍDO -->
+      <div class="setup-step" id="setupStep3">
+        <div style="text-align:center;padding:10px 0;">
+          <div style="font-size:4rem;margin-bottom:14px;">🎉</div>
+          <h3 style="font-size:1.1rem;margin-bottom:8px;">Tudo pronto!</h3>
+          <p style="margin-bottom:20px;color:var(--cinza);">Sua loja foi configurada com sucesso.</p>
+          <div style="background:var(--creme);border-radius:12px;padding:16px;text-align:left;margin-bottom:20px;">
+            <div id="setupResumo" style="font-size:.82rem;line-height:2;color:var(--acai);"></div>
+          </div>
+          <div style="background:#FFF5D6;border-radius:10px;padding:12px;font-size:.75rem;color:#9E6A00;margin-bottom:16px;text-align:left;">
+            💡 <strong>Dica:</strong> Vá em <strong>⚙️ Config</strong> para adicionar seus produtos com preços e fotos.
+          </div>
+          <button class="btn-setup-next" onclick="concluirSetup()" style="font-size:1rem;">
+            🚀 Entrar no sistema
+          </button>
         </div>
       </div>
 
@@ -1492,8 +1507,11 @@ function setSyncDot(state){
 
 // ── FIREBASE LISTENERS (tempo real) ──────────────────────────
 function iniciarListeners(){
+  // Caminho base dos dados: /lojas/{licencaCodigo}/ ou raiz (Naçaí)
+  const base = cfg._licencaCodigo ? 'lojas/'+cfg._licencaCodigo+'/' : '';
+
   // CONFIG
-  onValue(ref(db,'config'), snap=>{
+  onValue(ref(db, base+'config'), snap=>{
     if(snap.exists()){
       const remote=snap.val();
       cfg={...cfg,...remote};
@@ -1525,7 +1543,7 @@ function iniciarListeners(){
       document.getElementById('numPed').textContent=String(cfg.numPed||1).padStart(3,'0');
     } else {
       // Banco vazio — salvar config padrão
-      set(ref(db,'config'), cfg);
+      set(lRef('config'), cfg);
       renderProd();
     }
     document.getElementById('statusFb').textContent='● Online';
@@ -1533,7 +1551,7 @@ function iniciarListeners(){
   },{onlyOnce:false});
 
   // VENDAS
-  onValue(ref(db,'vendas'), snap=>{
+  onValue(ref(db, base+'vendas'), snap=>{
     vendas={};
     if(snap.exists()) vendas=snap.val();
     const tabAtiva=document.querySelector('.tab.active');
@@ -1543,7 +1561,7 @@ function iniciarListeners(){
   });
 
   // LANÇAMENTOS
-  onValue(ref(db,'lancamentos'), snap=>{
+  onValue(ref(db, base+'lancamentos'), snap=>{
     lancamentos={};
     if(snap.exists()) lancamentos=snap.val();
     const tabAtiva=document.querySelector('.tab.active');
@@ -1553,7 +1571,7 @@ function iniciarListeners(){
   });
 
   // MESAS
-  onValue(ref(db,'mesas'), snap=>{
+  onValue(ref(db, base+'mesas'), snap=>{
     mesas={};
     if(snap.exists()) mesas=snap.val();
     const tabAtiva=document.querySelector('.tab.active');
@@ -1561,7 +1579,7 @@ function iniciarListeners(){
   });
 
   // CAIXAS
-  onValue(ref(db,'caixas'), snap=>{
+  onValue(ref(db, base+'caixas'), snap=>{
     caixas={};
     if(snap.exists()) caixas=snap.val();
     const tabAtiva=document.querySelector('.tab.active');
@@ -1572,7 +1590,7 @@ function iniciarListeners(){
   });
 
   // CLIENTES
-  onValue(ref(db,'clientes'), snap=>{
+  onValue(ref(db, base+'clientes'), snap=>{
     clientes={};
     if(snap.exists()) clientes=snap.val();
     const tabAtiva=document.querySelector('.tab.active');
@@ -1583,16 +1601,20 @@ function iniciarListeners(){
 // ── SALVAR CONFIG ─────────────────────────────────────────────
 async function salvarCfgFb(){
   setSyncDot('sync');
-  // garantir que são arrays puros antes de salvar
+  const base=cfg._licencaCodigo?'lojas/'+cfg._licencaCodigo+'/':'';
   const cfgParaSalvar={
     ...cfg,
     produtos: getProdutos(),
     categorias: getCategorias(),
   };
-  await set(ref(db,'config'), cfgParaSalvar);
+  await set(ref(db, base+'config'), cfgParaSalvar);
   setSyncDot('ok');
 }
 
+function lRef(path){ // helper: referência relativa ao caminho da loja
+  const base=cfg._licencaCodigo?'lojas/'+cfg._licencaCodigo+'/':'';
+  return ref(db, base+path);
+}
 // ── RELÓGIO ──────────────────────────────────────────────────
 function tick(){ document.getElementById('relogio').textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
 setInterval(tick,1000); tick();
@@ -1875,9 +1897,9 @@ window.finalizarVenda=async function(){
     descontoValor:st.desconto.valor,
     total
   };
-  const vendaRef=await push(ref(db,'vendas'), v);
+  const vendaRef=await push(lRef('vendas'), v);
   // lançamento automático
-  await push(ref(db,'lancamentos'),{
+  await push(lRef('lancamentos'),{
     tipo:'receber', desc:'Venda PDV #'+String(v.numero).padStart(3,'0')+' ('+v.cliente+')',
     valor:v.total, data:v.data, venc:v.data, cat:'vendas', obs:'', pago:true, auto:true
   });
@@ -1885,14 +1907,14 @@ window.finalizarVenda=async function(){
   if(!st.clienteSel && v.cliente!=='Balcão' && v.tel){
     const jaExiste=Object.values(clientes).find(c=>c.tel===v.tel);
     if(!jaExiste){
-      const novoCliRef=await push(ref(db,'clientes'),{nome:v.cliente,tel:v.tel,end:v.end||'',criadoEm:v.data,obs:''});
+      const novoCliRef=await push(lRef('clientes'),{nome:v.cliente,tel:v.tel,end:v.end||'',criadoEm:v.data,obs:''});
       // atualizar venda com clienteKey
       // (não critico, apenas opcional)
     }
   }
   // incrementar numPed
   cfg.numPed=(cfg.numPed||1)+1;
-  await set(ref(db,'config'), cfg);
+  await set(lRef('config'), cfg);
   setSyncDot('ok');
   st.vendaAtual=v;
   mostrarRecibo(v);
@@ -2015,7 +2037,7 @@ window.novoLancamento=async function(){
   const pago=document.getElementById('lPago').checked;
   if(!desc||!val||val<=0){ toast('Preencha descrição e valor','vermelho'); return; }
   setSyncDot('sync');
-  await push(ref(db,'lancamentos'),{tipo:lanTipo,desc,valor:val,data:new Date().toISOString(),venc:venc||new Date().toISOString().split('T')[0],cat,obs,pago,auto:false});
+  await push(lRef('lancamentos'),{tipo:lanTipo,desc,valor:val,data:new Date().toISOString(),venc:venc||new Date().toISOString().split('T')[0],cat,obs,pago,auto:false});
   setSyncDot('ok');
   ['lDesc','lVal','lVenc','lObs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('lPago').checked=false;
@@ -2027,7 +2049,7 @@ window.vendaRapida=async function(){
   const desc=document.getElementById('qDesc').value.trim()||'Venda do dia';
   if(!val||val<=0){ toast('Informe o valor','vermelho'); return; }
   setSyncDot('sync');
-  await push(ref(db,'lancamentos'),{tipo:'receber',desc,valor:val,data:data?data+'T12:00:00.000Z':new Date().toISOString(),venc:data||new Date().toISOString().split('T')[0],cat:'vendas',obs:'',pago:true,auto:false});
+  await push(lRef('lancamentos'),{tipo:'receber',desc,valor:val,data:data?data+'T12:00:00.000Z':new Date().toISOString(),venc:data||new Date().toISOString().split('T')[0],cat:'vendas',obs:'',pago:true,auto:false});
   setSyncDot('ok');
   ['qVal','qData','qDesc'].forEach(id=>document.getElementById(id).value='');
   toast('Receita lançada ✓','verde');
@@ -2039,7 +2061,7 @@ window.despesaRapida=async function(){
   if(!desc){ toast('Informe a descrição','vermelho'); return; }
   if(!val||val<=0){ toast('Informe o valor','vermelho'); return; }
   setSyncDot('sync');
-  await push(ref(db,'lancamentos'),{tipo:'pagar',desc,valor:val,data:new Date().toISOString(),venc:new Date().toISOString().split('T')[0],cat,obs:'',pago:true,auto:false});
+  await push(lRef('lancamentos'),{tipo:'pagar',desc,valor:val,data:new Date().toISOString(),venc:new Date().toISOString().split('T')[0],cat,obs:'',pago:true,auto:false});
   setSyncDot('ok');
   ['dDesc','dVal'].forEach(id=>document.getElementById(id).value='');
   toast('Despesa registrada ✓','verde');
@@ -2431,7 +2453,7 @@ window.salvarCfg=async function(){
 window.zerarMesas=async function(){
   if(!confirm('Limpar TODAS as mesas abertas? Use só em emergência.'))return;
   setSyncDot('sync');
-  await set(ref(db,'mesas'),null);
+  await set(lRef('mesas'),null);
   setSyncDot('ok');
   toast('Mesas limpas ✓','verde');
 };
@@ -2551,16 +2573,17 @@ window.salvarClienteAuto=function(){
 
 
 // ── SETUP WIZARD ─────────────────────────────────────────────
-let setupStep=0;
-const SETUP_TOTAL=5;
-let setupCats=[
-  {emoji:'🛍️',nome:'Categoria 1',fidelidade:true},
-  {emoji:'🏷️',nome:'Categoria 2',fidelidade:false}
+let setupStep = 0;
+const SETUP_TOTAL = 4;
+let setupCats = [
+  {emoji:'🛍️', nome:'Categoria 1', fidelidade:true},
+  {emoji:'🏷️', nome:'Categoria 2', fidelidade:false}
 ];
 
 function initSetupDots(){
   const el=document.getElementById('setupStepDots'); if(!el)return;
-  el.innerHTML=Array.from({length:SETUP_TOTAL},(_,i)=>`<div class="setup-step-dot ${i===0?'active':''}"></div>`).join('');
+  el.innerHTML=Array.from({length:SETUP_TOTAL},(_,i)=>
+    `<div class="setup-step-dot ${i===0?'active':''}"></div>`).join('');
 }
 
 function updateSetupDots(){
@@ -2569,16 +2592,29 @@ function updateSetupDots(){
   });
 }
 
+window.atualizarPinPreview=function(){
+  const val=document.getElementById('sAdminPin').value||'';
+  const dots=document.querySelectorAll('#pinPreviewDots div');
+  dots.forEach((d,i)=>{
+    d.style.background=i<val.length?'var(--roxo)':'';
+    d.style.borderColor=i<val.length?'var(--roxo)':'var(--lilas)';
+  });
+};
+
 function renderSetupCats(){
   const el=document.getElementById('setupCatsLista'); if(!el)return;
   el.innerHTML=setupCats.map((c,i)=>`
     <div class="setup-cat-item">
-      <input value="${c.emoji}" style="width:44px;padding:5px;border:1.5px solid var(--lilas);border-radius:7px;text-align:center;font-size:1rem;outline:none;" oninput="setupCats[${i}].emoji=this.value">
-      <input value="${c.nome}" style="flex:1;padding:5px 9px;border:1.5px solid var(--lilas);border-radius:7px;font-size:.82rem;outline:none;" oninput="setupCats[${i}].nome=this.value">
-      <label style="display:flex;align-items:center;gap:4px;font-size:.72rem;cursor:pointer;white-space:nowrap;">
-        <input type="checkbox" ${c.fidelidade?'checked':''} onchange="setupCats[${i}].fidelidade=this.checked"> ⭐ Fid.
+      <input value="${c.emoji}" style="width:44px;padding:6px;border:1.5px solid var(--lilas);border-radius:7px;text-align:center;font-size:1.1rem;outline:none;"
+        oninput="setupCats[${i}].emoji=this.value">
+      <input value="${c.nome}" style="flex:1;padding:6px 10px;border:1.5px solid var(--lilas);border-radius:7px;font-size:.85rem;outline:none;"
+        placeholder="Nome da categoria" oninput="setupCats[${i}].nome=this.value">
+      <label style="display:flex;align-items:center;gap:5px;font-size:.72rem;cursor:pointer;white-space:nowrap;padding:0 4px;">
+        <input type="checkbox" ${c.fidelidade?'checked':''} onchange="setupCats[${i}].fidelidade=this.checked">
+        ⭐ Fidelidade
       </label>
-      <button onclick="setupCats.splice(${i},1);renderSetupCats()" style="background:none;border:none;color:var(--vermelho);cursor:pointer;font-size:.9rem;">🗑</button>
+      <button onclick="setupCats.splice(${i},1);renderSetupCats()"
+        style="background:#FFE0E0;border:none;border-radius:7px;padding:6px 9px;cursor:pointer;font-size:.85rem;color:var(--vermelho);">✕</button>
     </div>`).join('');
 }
 
@@ -2590,108 +2626,97 @@ window.addSetupCat=function(){
 window.setupNext=async function(){
   // Validações por step
   if(setupStep===0){
-    const apiKey=document.getElementById('sApiKey').value.trim();
-    const dbURL=document.getElementById('sDatabaseURL').value.trim();
-    const projectId=document.getElementById('sProjectId').value.trim();
-    const appId=document.getElementById('sAppId').value.trim();
-    const authDomain=document.getElementById('sAuthDomain').value.trim();
-    if(!apiKey||!dbURL||!projectId||!appId){
-      alert('Preencha pelo menos: apiKey, databaseURL, projectId e appId.'); return;
-    }
-    // Aplicar as credenciais no firebaseConfig e reiniciar
-    window._setupFirebase={apiKey,authDomain,databaseURL:dbURL,projectId,storageBucket:projectId+'.firebasestorage.app',appId};
-  }
-  if(setupStep===1){
-    const nome=document.getElementById('sNomeLoja').value.trim()||'Minha Loja';
-    const sub=document.getElementById('sSubtitulo').value.trim()||'Sistema de Vendas';
-    cfg.nome=nome; cfg.wpp=document.getElementById('sWpp').value.trim()||'';
-    // atualizar logo
-    const ln=document.getElementById('logoNome'); if(ln) ln.textContent=nome;
-    const ls=document.getElementById('logoSub'); if(ls) ls.textContent=sub;
-    const lln=document.getElementById('loginNome'); if(lln) lln.textContent=nome;
+    const nome=document.getElementById('sNomeLoja').value.trim();
+    if(!nome){ alert('Digite o nome da sua loja para continuar.'); return; }
+    cfg.nome=nome;
+    cfg.wpp=document.getElementById('sWpp').value.trim()||'';
+    const sub=document.getElementById('sSubtitulo').value.trim()||'PDV & Financeiro';
+    cfg._subtitulo=sub;
+    // atualizar logo imediatamente
+    const ln=document.getElementById('logoNome'); if(ln)ln.textContent=nome;
+    const ls=document.getElementById('logoSub'); if(ls)ls.textContent=sub;
+    const lln=document.getElementById('loginNome'); if(lln)lln.textContent=nome;
     document.title=nome+' — PDV';
   }
-  if(setupStep===2){
-    // converter setupCats para o formato do sistema
-    cfg.categorias=setupCats.map((c,i)=>({id:'cat_'+i,nome:c.nome,emoji:c.emoji,fidelidade:c.fidelidade}));
-    cfg.produtos=[
-      {id:1,nome:'Produto Exemplo',emoji:'🛍️',preco:10,cat:cfg.categorias[0]?.id||'cat_0',tipo:'kg'}
-    ];
+  if(setupStep===1){
+    if(!setupCats.length){ alert('Adicione pelo menos uma categoria.'); return; }
+    cfg.categorias=setupCats.map((c,i)=>({
+      id:'cat_'+i, nome:c.nome, emoji:c.emoji, fidelidade:c.fidelidade
+    }));
+    cfg.produtos=[]; // cliente vai adicionar produtos depois
   }
-  if(setupStep===3){
+  if(setupStep===2){
     const nome=document.getElementById('sAdminNome').value.trim();
     const pin=document.getElementById('sAdminPin').value.trim();
     const pin2=document.getElementById('sAdminPin2').value.trim();
-    if(!nome){alert('Informe seu nome.');return;}
-    if(pin.length!==4){alert('PIN deve ter 4 dígitos.');return;}
-    if(pin!==pin2){alert('PINs não conferem.');return;}
-    // guardar para usar no concluirSetup
+    if(!nome){ alert('Digite seu nome para continuar.'); return; }
+    if(pin.length!==4||!/^\d{4}$/.test(pin)){ alert('A senha deve ter exatamente 4 números.'); return; }
+    if(pin!==pin2){ alert('As senhas não conferem. Tente novamente.'); return; }
     window._setupAdmin={nome,pin};
-    // mostrar resumo
-    const res=document.getElementById('setupResumo');
-    if(res) res.innerHTML=`🏪 Loja: <strong>${cfg.nome}</strong><br>📂 ${cfg.categorias?.length||0} categorias criadas<br>👤 Administrador: <strong>${nome}</strong><br>🔑 Firebase configurado`;
+    // montar resumo
+    const r=document.getElementById('setupResumo');
+    if(r) r.innerHTML=`
+      🏪 <strong>Loja:</strong> ${cfg.nome}<br>
+      📂 <strong>Categorias:</strong> ${cfg.categorias?.length||0} criadas<br>
+      👤 <strong>Administrador:</strong> ${nome}<br>
+      ✅ <strong>Dados salvos com segurança</strong>`;
   }
-  if(setupStep===4){ concluirSetup(); return; }
+  if(setupStep===3){ concluirSetup(); return; }
+
   setupStep++;
   updateSetupDots();
-  document.querySelectorAll('.setup-step').forEach((s,i)=>s.classList.toggle('active',i===setupStep));
-  if(setupStep===2) renderSetupCats();
+  document.querySelectorAll('.setup-step').forEach((s,i)=>
+    s.classList.toggle('active',i===setupStep));
+  if(setupStep===1) renderSetupCats();
 };
 
 window.setupBack=function(){
   if(setupStep===0)return;
   setupStep--;
   updateSetupDots();
-  document.querySelectorAll('.setup-step').forEach((s,i)=>s.classList.toggle('active',i===setupStep));
+  document.querySelectorAll('.setup-step').forEach((s,i)=>
+    s.classList.toggle('active',i===setupStep));
 };
 
 window.concluirSetup=async function(){
-  // 1. Salvar no Firebase com as novas credenciais
+  const btn=document.querySelector('#setupStep3 .btn-setup-next');
+  if(btn){ btn.textContent='⏳ Salvando...'; btn.disabled=true; }
   try{
-    const fb=window._setupFirebase;
-    if(fb&&fb.apiKey!=='SUA_API_KEY_AQUI'){
-      // reiniciar Firebase com novas credenciais
-      const {initializeApp:ia,getApp,deleteApp}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-      const {getDatabase:gdb,ref:r2,set:s2,push:p2}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js');
-      try{ deleteApp(getApp()); }catch(e){}
-      const newApp=ia(fb,'pdv-app');
-      const newDb=gdb(newApp);
-      // salvar config
-      await s2(r2(newDb,'config'),{...cfg,setupConcluido:true});
+    // Salvar config no Firebase SaaS sob /lojas/{licencaCodigo}/config
+    const licCod=cfg._licencaCodigo;
+    if(licCod){
+      const cfgParaSalvar={
+        nome:cfg.nome, wpp:cfg.wpp, taxa:5,
+        subtitulo:cfg._subtitulo||'PDV & Financeiro',
+        categorias:cfg.categorias||[],
+        produtos:[], numPed:1,
+        setupConcluido:true, setupEm:new Date().toISOString()
+      };
+      await set(ref(db,'lojas/'+licCod+'/config'), cfgParaSalvar);
       // criar admin
       if(window._setupAdmin){
-        await p2(r2(newDb,'operadores'),{...window._setupAdmin,perfil:'admin',permissoes:PERMS_ADMIN,ativo:true,criadoEm:new Date().toISOString()});
+        await push(ref(db,'lojas/'+licCod+'/operadores'),{
+          ...window._setupAdmin,
+          perfil:'admin', permissoes:PERMS_ADMIN,
+          ativo:true, criadoEm:new Date().toISOString()
+        });
       }
+      // marcar licença como configurada
+      await update(ref(db,'licencas/'+cfg._licencaKey),{
+        setupConcluido:true, nomeLoja:cfg.nome
+      });
     }
-  }catch(e){ console.warn('Erro ao salvar setup:',e); }
-  // 2. Salvar credenciais no localStorage para recarregar automaticamente
-  if(window._setupFirebase){
-    localStorage.setItem('pdv_firebase_config', JSON.stringify(window._setupFirebase));
-  }
-  // 3. Fechar wizard e iniciar sistema
+  } catch(e){ console.warn('Erro ao salvar setup:',e); }
+
+  // Fechar wizard e abrir o app
   document.getElementById('setupWizard').classList.remove('show');
   iniciarListeners();
   iniciarListenerCampanhas();
   iniciarListenerOperadores();
   renderProd();
   renderItens();
-  toast('Sistema configurado com sucesso! 🎉','verde');
+  toast(`Bem-vinda ao PDV Pro, ${cfg.nome}! 🎉`,'verde');
 };
-
-function verificarSetup(){
-  // Checar se já tem credenciais salvas
-  const saved=localStorage.getItem('pdv_firebase_config');
-  if(saved){
-    try{
-      window._setupFirebase=JSON.parse(saved);
-      return false; // já configurado
-    }catch(e){}
-  }
-  // Checar se as credenciais no código são placeholder
-  const apiKey=firebaseConfig.apiKey;
-  return apiKey==='SUA_API_KEY_AQUI';
-}
-
 // ── OPERADORES ────────────────────────────────────────────────
 let operadores={};
 let opAtual=null; // operador logado
@@ -2742,7 +2767,7 @@ window.criarPrimeiroAdmin=async function(){
   const nome=document.getElementById('primeiroNome').value.trim();
   const pin=document.getElementById('primeiroPIN').value.trim();
   if(!nome||pin.length!==4){ alert('Preencha nome e PIN de 4 dígitos'); return; }
-  await push(ref(db,'operadores'),{nome,pin,perfil:'admin',permissoes:PERMS_ADMIN,ativo:true,criadoEm:new Date().toISOString()});
+  await push(lRef('operadores'),{nome,pin,perfil:'admin',permissoes:PERMS_ADMIN,ativo:true,criadoEm:new Date().toISOString()});
   toast('Administrador criado! Faça login.','verde');
 };
 
@@ -2853,7 +2878,7 @@ window.salvarOperador=async function(){
   const permissoes=perfil==='admin'?PERMS_ADMIN:
     PERMS_TODAS.filter(p=>document.getElementById('perm_'+p)?.checked);
   setSyncDot('sync');
-  await push(ref(db,'operadores'),{nome,pin,perfil,permissoes,ativo:true,criadoEm:new Date().toISOString()});
+  await push(lRef('operadores'),{nome,pin,perfil,permissoes,ativo:true,criadoEm:new Date().toISOString()});
   setSyncDot('ok');
   ['opNome','opPin'].forEach(id=>document.getElementById(id).value='');
   PERMS_TODAS.forEach(p=>{ const el=document.getElementById('perm_'+p); if(el)el.checked=PERMS_OPERADOR.includes(p); });
@@ -2880,7 +2905,7 @@ window.deletarOperador=async function(key){
   if(!op)return;
   if(opAtual?._key===key){ toast('Não pode remover o operador logado','vermelho'); return; }
   if(!confirm(`Remover operador ${op.nome}?`))return;
-  await remove(ref(db,'operadores/'+key));
+  await remove(lRef('operadores/'+key));
   toast('Operador removido','vermelho');
 };
 
@@ -3066,20 +3091,20 @@ window.salvarCampanha=async function(){
   if(!nome||!inicio||!fim||!valor){ toast('Preencha todos os campos obrigatórios','vermelho'); return; }
   if(fim<inicio){ toast('Data fim deve ser após o início','vermelho'); return; }
   setSyncDot('sync');
-  await push(ref(db,'campanhas'),{nome,inicio,fim,tipo,valor,aplica,descricao,ativa:true,criadaEm:new Date().toISOString()});
+  await push(lRef('campanhas'),{nome,inicio,fim,tipo,valor,aplica,descricao,ativa:true,criadaEm:new Date().toISOString()});
   setSyncDot('ok');
   ['campNome','campInicio','campFim','campValor','campDesc'].forEach(id=>document.getElementById(id).value='');
   toast('Campanha salva ✓','verde');
 };
 
 window.toggleCampanha=async function(key,ativa){
-  await update(ref(db,'campanhas/'+key),{ativa});
+  await update(lRef('campanhas/'+key),{ativa});
   toast(ativa?'Campanha ativada ✓':'Campanha pausada','verde');
 };
 
 window.deletarCampanha=async function(key){
   if(!confirm('Remover esta campanha?'))return;
-  await remove(ref(db,'campanhas/'+key));
+  await remove(lRef('campanhas/'+key));
   toast('Campanha removida','vermelho');
 };
 let rankTipo='valor';
@@ -3182,11 +3207,11 @@ window.salvarCliente=async function(){
   setSyncDot('sync');
   const data={nome,tel,end,ref:ref2,obs,atualizadoEm:new Date().toISOString()};
   if(editKey){
-    await update(ref(db,'clientes/'+editKey),data);
+    await update(lRef('clientes/'+editKey),data);
     toast('Cliente atualizado ✓','verde');
   } else {
     data.criadoEm=new Date().toISOString();
-    await push(ref(db,'clientes'),data);
+    await push(lRef('clientes'),data);
     toast('Cliente salvo ✓','verde');
   }
   setSyncDot('ok');
@@ -3322,9 +3347,9 @@ window.abrirComanda=async function(num){
     return;
   }
   if(!mesa){
-    const novaRef=await push(ref(db,'mesas'),{numero:num,status:'aberta',abertura:new Date().toISOString(),itens:{},nomeCustom:''});
+    const novaRef=await push(lRef('mesas'),{numero:num,status:'aberta',abertura:new Date().toISOString(),itens:{},nomeCustom:''});
     mesaAtual=novaRef.key;
-    const snap=await get(ref(db,'mesas/'+novaRef.key));
+    const snap=await get(lRef('mesas/'+novaRef.key));
     mesa={...snap.val(),_key:novaRef.key};
   } else {
     mesaAtual=mesa._key;
@@ -3366,7 +3391,7 @@ window.selecionarClienteMesa=async function(key){
   document.getElementById('mesaCliSelBadge').style.display='flex';
   document.getElementById('mesaCliBuscaWrap').style.display='none';
   // salvar clienteKey na mesa no Firebase
-  await update(ref(db,'mesas/'+mesaAtual),{clienteKey:key});
+  await update(lRef('mesas/'+mesaAtual),{clienteKey:key});
   atualizarFidelidadeMesa(key);
   toast(c.nome+' identificado ✓','verde');
 };
@@ -3376,7 +3401,7 @@ window.removerClienteMesa=async function(){
   document.getElementById('mesaCliBuscaWrap').style.display='block';
   document.getElementById('mesaCliBusca').value='';
   document.getElementById('mesaFidelidadeBox').style.display='none';
-  if(mesaAtual) await update(ref(db,'mesas/'+mesaAtual),{clienteKey:null});
+  if(mesaAtual) await update(lRef('mesas/'+mesaAtual),{clienteKey:null});
 };
 
 function atualizarFidelidadeMesa(key){
@@ -3457,7 +3482,7 @@ window.executarTransferencia=async function(num, nova, mesaKey){
   let key=mesaKey;
   if(nova){
     // abrir nova mesa
-    const novaRef=await push(ref(db,'mesas'),{
+    const novaRef=await push(lRef('mesas'),{
       numero:num, status:'aberta',
       abertura:new Date().toISOString(),
       itens:{}, nomeCustom:'',
@@ -3468,7 +3493,7 @@ window.executarTransferencia=async function(num, nova, mesaKey){
 
   // transferir itens
   for(const item of itensParaTransferir){
-    await push(ref(db,'mesas/'+key+'/itens'),{
+    await push(lRef('mesas/'+key+'/itens'),{
       tipo:item.tipo, nome:item.nome, emoji:item.emoji||'',
       cat:item.cat||'', peso:item.peso||0, preco:item.preco,
       subtotal:item.subtotal, fidelidade:item.fidelidade||false,
@@ -3502,7 +3527,7 @@ window.salvarNomeMesa=async function(){
   if(!novoNome||!mesaAtual)return;
   display.textContent=novoNome;
   setSyncDot('sync');
-  await update(ref(db,'mesas/'+mesaAtual),{nomeCustom:novoNome});
+  await update(lRef('mesas/'+mesaAtual),{nomeCustom:novoNome});
   setSyncDot('ok');
   renderMesas();
   toast('Nome salvo ✓','verde');
@@ -3613,7 +3638,7 @@ window.selProdMesa=function(id){
 async function adicionarFixoComanda(p){
   if(!mesaAtual){ toast('Erro: mesa não identificada','vermelho'); return; }
   setSyncDot('sync');
-  await push(ref(db,'mesas/'+mesaAtual+'/itens'),{
+  await push(lRef('mesas/'+mesaAtual+'/itens'),{
     tipo:'fixo', nome:p.nome, emoji:p.emoji||'',
     cat:p.cat||'', peso:0, preco:p.preco,
     subtotal:p.preco, fidelidade:getCategorias().find(c=>c.id===p.cat)?.fidelidade||false,
@@ -3621,7 +3646,7 @@ async function adicionarFixoComanda(p){
   });
   setSyncDot('ok');
   toast(p.nome+' adicionado ✓','verde');
-  const snap=await get(ref(db,'mesas/'+mesaAtual));
+  const snap=await get(lRef('mesas/'+mesaAtual));
   if(snap.exists()) renderComandaItens({...snap.val(),_key:mesaAtual});
 }
 
@@ -3636,7 +3661,7 @@ window.addItemComanda=async function(){
   const cat=getCategorias().find(c=>c.id===prodSelMesa.cat);
 
   setSyncDot('sync');
-  await push(ref(db,'mesas/'+mesaAtual+'/itens'),{
+  await push(lRef('mesas/'+mesaAtual+'/itens'),{
     tipo:'kg', nome:prodSelMesa.nome, emoji:prodSelMesa.emoji||'',
     cat:prodSelMesa.cat||'', peso, preco:prodSelMesa.preco,
     subtotal, fidelidade:cat?.fidelidade||false,
@@ -3652,7 +3677,7 @@ window.addItemComanda=async function(){
   toast('Adicionado ✓','verde');
 
   // recarregar dados da mesa
-  const snap=await get(ref(db,'mesas/'+mesaAtual));
+  const snap=await get(lRef('mesas/'+mesaAtual));
   if(snap.exists()) renderComandaItens({...snap.val(),_key:mesaAtual});
   toast('Item adicionado ✓','verde');
 };
@@ -3660,13 +3685,13 @@ window.addItemComanda=async function(){
 window.addAdicComanda=async function(id){
   const a=(cfg.adicionais||[]).find(x=>x.id===id); if(!a||!mesaAtual)return;
   setSyncDot('sync');
-  await push(ref(db,'mesas/'+mesaAtual+'/itens'),{
+  await push(lRef('mesas/'+mesaAtual+'/itens'),{
     tipo:'adicional', nome:a.nome, emoji:a.emoji,
     preco:a.preco, subtotal:a.preco, obs:'',
     adicionadoEm:new Date().toISOString()
   });
   setSyncDot('ok');
-  const snap=await get(ref(db,'mesas/'+mesaAtual));
+  const snap=await get(lRef('mesas/'+mesaAtual));
   if(snap.exists()) renderComandaItens({...snap.val(),_key:mesaAtual});
   toast(a.nome+' adicionado ✓','verde');
 };
@@ -3674,9 +3699,9 @@ window.addAdicComanda=async function(id){
 window.rmItemComanda=async function(itemKey){
   if(!mesaAtual)return;
   setSyncDot('sync');
-  await remove(ref(db,'mesas/'+mesaAtual+'/itens/'+itemKey));
+  await remove(lRef('mesas/'+mesaAtual+'/itens/'+itemKey));
   setSyncDot('ok');
-  const snap=await get(ref(db,'mesas/'+mesaAtual));
+  const snap=await get(lRef('mesas/'+mesaAtual));
   if(snap.exists()) renderComandaItens({...snap.val(),_key:mesaAtual});
 };
 
@@ -3840,7 +3865,7 @@ window.fecharMesa=async function(){
   if(totalPago<total-0.005){toast('Falta R$ '+fmt(total-totalPago)+' para cobrir o total','vermelho');return;}
   if(!getCaixaAberto()){toast('⚠️ Caixa fechado!','vermelho');return;}
 
-  const snap=await get(ref(db,'mesas/'+mesaAtual));
+  const snap=await get(lRef('mesas/'+mesaAtual));
   if(!snap.exists()){toast('Mesa não encontrada','vermelho');return;}
   const mesa=snap.val();
   const itens=mesa.itens?Object.values(mesa.itens):[];
@@ -3864,14 +3889,14 @@ window.fecharMesa=async function(){
     ajusteValor:_mesaAjuste.valor,
     taxa:0, total
   };
-  await push(ref(db,'vendas'),v);
-  await push(ref(db,'lancamentos'),{
+  await push(lRef('vendas'),v);
+  await push(lRef('lancamentos'),{
     tipo:'receber', desc:'Mesa '+mesa.numero+(clienteKey?' ('+clienteNome+')':''),
     valor:total, data:new Date().toISOString(), venc:new Date().toISOString().split('T')[0],
     cat:'vendas', obs:'', pago:true, auto:true
   });
   cfg.numPed=(cfg.numPed||1)+1;
-  await set(ref(db,'config'),cfg);
+  await set(lRef('config'),cfg);
 
   // Fidelidade — usa clienteKey da mesa
   if(clienteKey){
@@ -3887,7 +3912,7 @@ window.fecharMesa=async function(){
     }
   }
 
-  await remove(ref(db,'mesas/'+mesaAtual));
+  await remove(lRef('mesas/'+mesaAtual));
   setSyncDot('ok');
   fecharModalMesa();
   toast('Mesa '+mesa.numero+' fechada! ✅','verde');
@@ -3896,11 +3921,11 @@ window.fecharMesa=async function(){
 
 window.cancelarMesa=async function(){
   if(!mesaAtual)return;
-  const snap=await get(ref(db,'mesas/'+mesaAtual));
+  const snap=await get(lRef('mesas/'+mesaAtual));
   const mesa=snap.exists()?snap.val():{numero:'?'};
   if(!confirm('Cancelar e liberar a Mesa '+mesa.numero+'? Os itens serão perdidos.'))return;
   setSyncDot('sync');
-  await remove(ref(db,'mesas/'+mesaAtual));
+  await remove(lRef('mesas/'+mesaAtual));
   setSyncDot('ok');
   fecharModalMesa();
   toast('Mesa liberada','vermelho');
@@ -3949,7 +3974,7 @@ async function processarFidelidade(clienteKey, itens){
   const gastoRestante=novoGasto%(FID_META);
   const creditosTotal=creditos+creditosNovos;
   const novaExp=new Date(Date.now()+(EXPIRA_DIAS*24*60*60*1000)).toISOString();
-  await update(ref(db,'clientes/'+clienteKey),{
+  await update(lRef('clientes/'+clienteKey),{
     gastoAcum:gastoRestante, creditos:creditosTotal,
     pontosExpira:novaExp, ultimaCompra:new Date().toISOString()
   });
@@ -3962,7 +3987,7 @@ async function usarCreditoFidelidade(clienteKey, creditosUsar){
   const usados=Math.min(creditos,creditosUsar);
   const restante=creditos-usados;
   const novaExp=restante>0?new Date(Date.now()+(EXPIRA_DIAS*24*60*60*1000)).toISOString():null;
-  await update(ref(db,'clientes/'+clienteKey),{creditos:restante,pontosExpira:novaExp});
+  await update(lRef('clientes/'+clienteKey),{creditos:restante,pontosExpira:novaExp});
   return usados*FID_CREDITO; // R$ de desconto aplicado
 }
 
@@ -4199,7 +4224,7 @@ window.abrirCaixa=async function(){
   const obs=document.getElementById('obsAbertura').value.trim();
   if(val<0){ toast('Valor inválido','vermelho'); return; }
   setSyncDot('sync');
-  await push(ref(db,'caixas'),{
+  await push(lRef('caixas'),{
     status:'aberto',
     abertura:new Date().toISOString(),
     valorAbertura:val,
@@ -4218,7 +4243,7 @@ window.fecharCaixa=async function(key,esperado,totalVendas,totalDin,totalPix,tot
   const diferenca=contado-esperado;
 
   // buscar vendas do caixa para detalhar
-  const cxSnap=await get(ref(db,'caixas/'+key));
+  const cxSnap=await get(lRef('caixas/'+key));
   if(!cxSnap.exists())return;
   const cx=cxSnap.val();
   const ini=new Date(cx.abertura);
@@ -4243,7 +4268,7 @@ window.fecharCaixa=async function(key,esperado,totalVendas,totalDin,totalPix,tot
   };
 
   setSyncDot('sync');
-  await update(ref(db,'caixas/'+key),{
+  await update(lRef('caixas/'+key),{
     status:'fechado', fechamento:new Date().toISOString(),
     valorContado:contado, obsFechamento:obs, resumo
   });
@@ -4416,7 +4441,7 @@ window.registrarSangria=async function(cxKey){
   const desc=document.getElementById('sangriaDesc').value.trim();
   if(val<=0){ toast('Informe o valor','vermelho'); return; }
   setSyncDot('sync');
-  await push(ref(db,'caixas/'+cxKey+'/sangrias'),{valor:val,desc:desc||'Sangria',data:new Date().toISOString()});
+  await push(lRef('caixas/'+cxKey+'/sangrias'),{valor:val,desc:desc||'Sangria',data:new Date().toISOString()});
   setSyncDot('ok');
   document.getElementById('sangriaVal').value='';
   document.getElementById('sangriaDesc').value='';
@@ -4427,7 +4452,7 @@ window.registrarSangria=async function(cxKey){
 window.deletarSangria=async function(cxKey,sKey){
   if(!confirm('Remover esta sangria?'))return;
   setSyncDot('sync');
-  await remove(ref(db,'caixas/'+cxKey+'/sangrias/'+sKey));
+  await remove(lRef('caixas/'+cxKey+'/sangrias/'+sKey));
   setSyncDot('ok');
 };
 
@@ -4514,8 +4539,8 @@ async function verificarLicenca(){
     // ✅ Licença válida
     licencaKey = licenca._key;
     licencaValida = true;
-    // Usar o código como prefixo do banco de dados do cliente
     cfg._licencaCodigo = codigo;
+    cfg._licencaKey = licenca._key;
     cfg._licencaNome = licenca.nome;
     // Atualizar logo com o nome da empresa do cliente
     if(licenca.nome){
@@ -4553,49 +4578,45 @@ function mostrarBloqueio(ico, titulo, msg, mostrarContato=false){
 
 // ── INIT ─────────────────────────────────────────────────────
 (async function init(){
-// 1. Verificar licença primeiro
-const licOk = await verificarLicenca();
-if(!licOk) return; // bloqueia se inválida
 
-// Verificar se precisa de setup inicial
+// 1. Verificar licença no Firebase SaaS
+const licOk = await verificarLicenca();
+if(!licOk) return;
+
+// 2. Verificar se loja já fez setup (config existe no Firebase)
 initSetupDots();
-if(verificarSetup()){
-  document.getElementById('setupWizard').classList.add('show');
-} else {
-  // Credenciais salvas — aplicar e iniciar normalmente
-  const savedFb=localStorage.getItem('pdv_firebase_config');
-  if(savedFb){
-    try{ window._setupFirebase=JSON.parse(savedFb); }catch(e){}
+try{
+  const snap = await get(lRef('config'));
+  if(snap.exists() && snap.val().setupConcluido){
+    // Já configurado — carregar dados da loja
+    const cfgLoja = snap.val();
+    cfg = {...cfg, ...cfgLoja};
+    if(cfg.produtos && !Array.isArray(cfg.produtos)) cfg.produtos=Object.values(cfg.produtos).filter(Boolean);
+    if(cfg.categorias && !Array.isArray(cfg.categorias)) cfg.categorias=Object.values(cfg.categorias).filter(Boolean);
+    // atualizar logo
+    const ln=document.getElementById('logoNome'); if(ln) ln.textContent=cfg.nome||'PDV Pro';
+    const ls=document.getElementById('logoSub'); if(ls) ls.textContent=cfg.subtitulo||'PDV & Financeiro';
+    const lln=document.getElementById('loginNome'); if(lln) lln.textContent=cfg.nome||'PDV Pro';
+    document.title=(cfg.nome||'PDV Pro')+' — PDV';
+  } else {
+    // Primeira vez — mostrar Setup Wizard
+    document.getElementById('setupWizard').classList.add('show');
+    renderSetupCats();
+    return; // listeners serão iniciados pelo concluirSetup
   }
+} catch(e){
+  // Sem conexão — mostrar com dados padrão
+  console.warn('Sem conexão Firebase, usando dados padrão');
 }
 
-// Garantir produtos padrão sempre disponíveis antes de renderizar
-if(!cfg.categorias||!cfg.categorias.length) cfg.categorias=[
-  {id:'gelados',nome:'Gelados',emoji:'🍦',fidelidade:true},
-  {id:'bomboniere',nome:'Bomboniere',emoji:'🍫',fidelidade:false},
-  {id:'bebidas',nome:'Bebidas',emoji:'🥤',fidelidade:false},
-  {id:'campanhas',nome:'Campanhas',emoji:'📣',fidelidade:false},
-];
-if(!cfg.produtos||!cfg.produtos.length) cfg.produtos=[
-  {id:1,nome:'Açaí Tradicional',emoji:'🍇',preco:28,cat:'gelados',tipo:'kg'},
-  {id:2,nome:'Açaí Premium',emoji:'💜',preco:35,cat:'gelados',tipo:'kg'},
-  {id:3,nome:'Açaí c/ Frutas',emoji:'🍓',preco:32,cat:'gelados',tipo:'kg'},
-  {id:4,nome:'Gelato',emoji:'🍦',preco:34,cat:'gelados',tipo:'kg'},
-  {id:5,nome:'Copo 300ml',emoji:'🥤',preco:2,cat:'bebidas',tipo:'fixo'},
-  {id:6,nome:'Copo 500ml',emoji:'🥤',preco:3,cat:'bebidas',tipo:'fixo'},
-  {id:7,nome:'Granola extra',emoji:'🌾',preco:2,cat:'gelados',tipo:'fixo'},
-  {id:8,nome:'Leite em pó',emoji:'🥛',preco:1.5,cat:'gelados',tipo:'fixo'},
-  {id:9,nome:'Calda morango',emoji:'🍓',preco:2,cat:'gelados',tipo:'fixo'},
-];
-
-// Mostrar app imediatamente com dados locais
+// 3. Renderizar app com dados já carregados
 renderProd();
 renderItens();
 document.getElementById('lVenc').value=new Date().toISOString().split('T')[0];
 document.getElementById('qData').value=new Date().toISOString().split('T')[0];
 document.getElementById('numPed').textContent=String(cfg.numPed||1).padStart(3,'0');
 
-// Conecta ao Firebase DEPOIS de renderizar a UI (não bloqueia)
+// 4. Conectar listeners Firebase em background
 setTimeout(()=>{
   try{
     iniciarListeners();
@@ -4604,7 +4625,7 @@ setTimeout(()=>{
   }catch(e){ console.warn('Firebase erro:',e); }
 }, 100);
 
-// Se Firebase demorar 5s, mostrar aviso mas app continua funcionando
+// 5. Aviso se Firebase demorar
 setTimeout(()=>{
   const s=document.getElementById('statusFb');
   if(s&&s.textContent.includes('Conectando')){
