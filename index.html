@@ -1279,6 +1279,40 @@ header,nav,.page,#tab-venda{visibility:hidden;}
 <div id="tab-config" class="page">
   <div class="cfg-section">
     <h3>⚙️ Configurações Gerais</h3>
+
+    <!-- IDENTIDADE VISUAL -->
+    <div style="background:var(--creme);border-radius:10px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:.72rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">🎨 Identidade Visual</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <!-- LOGO -->
+        <div style="text-align:center;">
+          <div id="cfgLogoArea" onclick="document.getElementById('cfgLogoInput').click()"
+            style="width:80px;height:80px;border-radius:50%;background:var(--lilas);border:3px dashed var(--roxo);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:2rem;overflow:hidden;position:relative;">
+            <span id="cfgLogoEmoji">🏪</span>
+            <img id="cfgLogoImg" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+          </div>
+          <input type="file" id="cfgLogoInput" accept="image/*" style="display:none;" onchange="trocarLogo(this)">
+          <div style="font-size:.65rem;color:var(--cinza);margin-top:5px;cursor:pointer;" onclick="document.getElementById('cfgLogoInput').click()">📷 Trocar logo</div>
+        </div>
+        <!-- EMOJIS E NOME -->
+        <div style="flex:1;min-width:200px;">
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
+            <span onclick="selecionarEmojiCfg('🏪')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);" title="Loja">🏪</span>
+            <span onclick="selecionarEmojiCfg('🍇')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🍇</span>
+            <span onclick="selecionarEmojiCfg('🍦')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🍦</span>
+            <span onclick="selecionarEmojiCfg('🍕')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🍕</span>
+            <span onclick="selecionarEmojiCfg('🥤')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🥤</span>
+            <span onclick="selecionarEmojiCfg('🍔')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🍔</span>
+            <span onclick="selecionarEmojiCfg('☕')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">☕</span>
+            <span onclick="selecionarEmojiCfg('🧁')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🧁</span>
+            <span onclick="selecionarEmojiCfg('🐔')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🐔</span>
+            <span onclick="selecionarEmojiCfg('🌮')" style="font-size:1.3rem;cursor:pointer;padding:3px 6px;border-radius:7px;border:1.5px solid var(--lilas);">🌮</span>
+          </div>
+          <div style="font-size:.68rem;color:var(--cinza);">Ou faça upload da sua logomarca (JPG, PNG)</div>
+        </div>
+      </div>
+    </div>
+
     <div class="cfg-row"><div><div class="cfg-lbl">Nome do estabelecimento</div></div><input type="text" id="cfgNome"></div>
     <div class="cfg-row"><div><div class="cfg-lbl">Número de mesas</div><div class="cfg-sub">Quantas mesas aparecem na tela</div></div><input type="number" id="cfgNumMesas" value="10" min="1" max="50"></div>
     <div class="cfg-row"><div><div class="cfg-lbl">Taxa de entrega (R$)</div></div><input type="number" id="cfgTaxa" step="0.5"></div>
@@ -2264,10 +2298,11 @@ function iconeHtml(img, emoji, id, tipo){
 }
 
 function renderCfg(){
-  document.getElementById('cfgNome').value=cfg.nome||'Naçaí';
+  document.getElementById('cfgNome').value=cfg.nome||'Minha Loja';
   document.getElementById('cfgTaxa').value=cfg.taxa||3;
   document.getElementById('cfgWpp').value=cfg.wpp||'';
   document.getElementById('cfgNumMesas').value=cfg.numMesas||10;
+  renderCfgLogo();
   // desconto
   const dm=document.getElementById('cfgDescontoMax');
   const da=document.getElementById('cfgDescontoAviso');
@@ -2430,12 +2465,66 @@ window.addAdicCfg=function(){
   cfg.produtos.push({id:Date.now(),nome:'Novo Adicional',emoji:'➕',preco:2,cat:primCat,tipo:'fixo'});
   salvarCfgFb(); renderCfg(); renderProd();
 };
+// ── LOGO NA CONFIG ────────────────────────────────────────────
+window.trocarLogo=function(input){
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const img=new Image();
+    img.onload=function(){
+      const canvas=document.createElement('canvas');
+      const MAX=200; let w=img.width,h=img.height;
+      if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}
+      else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const b64=canvas.toDataURL('image/jpeg',0.85);
+      cfg.logoBase64=b64; cfg.logoEmoji='';
+      // Atualizar preview na config
+      const imgEl=document.getElementById('cfgLogoImg');
+      const emojiEl=document.getElementById('cfgLogoEmoji');
+      if(imgEl){ imgEl.src=b64; imgEl.style.display='block'; }
+      if(emojiEl) emojiEl.style.display='none';
+      // Atualizar header
+      atualizarLogoUI(cfg.nome, b64, '');
+      toast('Logo atualizada! Clique em Salvar para confirmar.','verde');
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+window.selecionarEmojiCfg=function(emoji){
+  cfg.logoEmoji=emoji; cfg.logoBase64='';
+  const imgEl=document.getElementById('cfgLogoImg');
+  const emojiEl=document.getElementById('cfgLogoEmoji');
+  if(imgEl) imgEl.style.display='none';
+  if(emojiEl){ emojiEl.textContent=emoji; emojiEl.style.display='block'; }
+  atualizarLogoUI(cfg.nome, '', emoji);
+  toast('Ícone selecionado! Clique em Salvar para confirmar.','verde');
+};
+
+function renderCfgLogo(){
+  const imgEl=document.getElementById('cfgLogoImg');
+  const emojiEl=document.getElementById('cfgLogoEmoji');
+  if(!imgEl||!emojiEl) return;
+  if(cfg.logoBase64){
+    imgEl.src=cfg.logoBase64; imgEl.style.display='block';
+    emojiEl.style.display='none';
+  } else {
+    emojiEl.textContent=cfg.logoEmoji||'🏪'; emojiEl.style.display='block';
+    imgEl.style.display='none';
+  }
+}
+
 window.salvarCfg=async function(){
-  cfg.nome=document.getElementById('cfgNome').value||'Naçaí';
-  cfg.taxa=parseFloat(document.getElementById('cfgTaxa').value)||0;
-  cfg.wpp=document.getElementById('cfgWpp').value;
+  cfg.nome=document.getElementById('cfgNome').value||'Minha Loja';
   cfg.numMesas=parseInt(document.getElementById('cfgNumMesas').value)||10;
+  cfg.taxa=parseFloat(document.getElementById('cfgTaxa').value)||0;
+  cfg.wpp=document.getElementById('cfgWpp').value.trim()||'';
   await salvarCfgFb();
+  atualizarLogoUI(cfg.nome, cfg.logoBase64||'', cfg.logoEmoji||'🏪');
+  renderMesas();
   toast('Configurações salvas ✓','verde');
 };
 window.zerarMesas=async function(){
